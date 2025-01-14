@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6us-ID-je0" userLabel="Yes button">
-                                <rect key="frame" x="237" y="802" width="157" height="60"/>
+                                <rect key="frame" x="217" y="802" width="177" height="60"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="157" id="SnT-OU-e0y"/>
@@ -40,7 +40,7 @@
                                 </userDefinedRuntimeAttributes>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FlA-5T-uJj" userLabel="No button">
-                                <rect key="frame" x="20" y="802" width="157" height="60"/>
+                                <rect key="frame" x="20" y="802" width="177" height="60"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="157" id="6fZ-sa-UUg"/>
@@ -75,6 +75,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6us-ID-je0" secondAttribute="trailing" constant="20" id="mML-2m-oqf"/>
                             <constraint firstItem="6us-ID-je0" firstAttribute="width" secondItem="FlA-5T-uJj" secondAttribute="width" id="pDp-6h-Qsg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="6us-ID-je0" secondAttribute="bottom" id="reC-sz-0NW"/>
+                            <constraint firstItem="6us-ID-je0" firstAttribute="leading" secondItem="FlA-5T-uJj" secondAttribute="trailing" constant="20" id="t3O-O8-lJD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FlA-5T-uJj" secondAttribute="bottom" id="uNq-Cf-Gm2"/>
                         </constraints>
                     </view>
