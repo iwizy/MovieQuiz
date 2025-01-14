@@ -21,9 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		848C6D292D35A13800834BF6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = "Base.lproj/YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		848C6D2C2D35A13D00834BF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = "en.lproj/YS Display-Bold.ttf"; sourceTree = "<group>"; };
-		848C6D2D2D35A14A00834BF6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file; name = Base; path = "Base.lproj/YS Display-Medium.ttf"; sourceTree = "<group>"; };
 		848C6D302D35A14B00834BF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = "en.lproj/YS Display-Medium.ttf"; sourceTree = "<group>"; };
 		AD1ABAAE2831907B00B3E448 /* MovieQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1ABAB12831907B00B3E448 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -213,7 +211,6 @@
 		848C6D2A2D35A13800834BF6 /* YS Display-Bold.ttf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				848C6D292D35A13800834BF6 /* Base */,
 				848C6D2C2D35A13D00834BF6 /* en */,
 			);
 			name = "YS Display-Bold.ttf";
@@ -222,7 +219,6 @@
 		848C6D2E2D35A14A00834BF6 /* YS Display-Medium.ttf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				848C6D2D2D35A14A00834BF6 /* Base */,
 				848C6D302D35A14B00834BF6 /* en */,
 			);
 			name = "YS Display-Medium.ttf";

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_12" orientation="portrait" appearance="dark"/>
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -19,11 +19,11 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MovieQuizViewController" customModule="MovieQuiz" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6us-ID-je0" userLabel="Yes button">
-                                <rect key="frame" x="216" y="758" width="157" height="60"/>
+                                <rect key="frame" x="237" y="802" width="157" height="60"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="157" id="SnT-OU-e0y"/>
@@ -40,7 +40,7 @@
                                 </userDefinedRuntimeAttributes>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FlA-5T-uJj" userLabel="No button">
-                                <rect key="frame" x="20" y="758" width="157" height="60"/>
+                                <rect key="frame" x="20" y="802" width="157" height="60"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="157" id="6fZ-sa-UUg"/>
@@ -57,12 +57,20 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вопрос:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JMv-Hh-Y9p">
+                                <rect key="frame" x="20" y="58" width="72" height="24"/>
+                                <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
+                                <color key="textColor" name="YP White"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="6us-ID-je0" firstAttribute="height" secondItem="FlA-5T-uJj" secondAttribute="height" id="Jqg-qJ-Mqm"/>
+                            <constraint firstItem="JMv-Hh-Y9p" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="KHk-7P-koy"/>
                             <constraint firstItem="FlA-5T-uJj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="L3h-7m-e21"/>
+                            <constraint firstItem="JMv-Hh-Y9p" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="XAr-3f-A2A"/>
                             <constraint firstItem="6us-ID-je0" firstAttribute="width" secondItem="FlA-5T-uJj" secondAttribute="width" id="b4f-p5-cQQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6us-ID-je0" secondAttribute="trailing" constant="20" id="mML-2m-oqf"/>
                             <constraint firstItem="6us-ID-je0" firstAttribute="width" secondItem="FlA-5T-uJj" secondAttribute="width" id="pDp-6h-Qsg"/>
