@@ -93,7 +93,51 @@ final class MovieQuizViewController: UIViewController {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
+        imageView.layer.borderWidth = 8
+        imageView.layer.cornerRadius = 20
     }
+    
+    private func dispatcher() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            // код, который мы хотим вызвать через 1 секунду
+            self.showNextQuestionOrResults()
+            self.imageView.layer.borderWidth = 0
+        }
+    }
+    
+    // приватный метод, который меняет цвет рамки
+    // принимает на вход булевое значение и ничего не возвращает
+    private func showAnswerResult(isCorrect: Bool) {
+        if isCorrect {
+            imageView.layer.borderColor = UIColor.ypGreen.cgColor
+            imageView.layer.borderWidth = 8
+            dispatcher()
+            
+            
+        } else {
+            imageView.layer.borderColor = UIColor.ypRed.cgColor
+            imageView.layer.borderWidth = 8
+            dispatcher()
+        }
+    }
+    
+    
+    
+    // приватный метод, который содержит логику перехода в один из сценариев
+    // метод ничего не принимает и ничего не возвращает
+    private func showNextQuestionOrResults() {
+        if currentQuestionIndex == questions.count - 1 { // 1
+            // идём в состояние "Результат квиза"
+        } else { // 2
+            currentQuestionIndex += 1
+            // идём в состояние "Вопрос показан"
+            let nextQuestion = questions[currentQuestionIndex]
+            let viewModel = convert(model: nextQuestion)
+            
+            show(quiz: viewModel)
+        }
+    }
+    
     
     
     
@@ -102,9 +146,11 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var counterLabel: UILabel!
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
+        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == true)
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
+        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == false)
     }
     
 }
