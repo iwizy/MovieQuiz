@@ -97,6 +97,29 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.cornerRadius = 20
     }
     
+    private func show(quiz result: QuizResultsViewModel) {
+        // создаём объекты всплывающего окна
+        let alert = UIAlertController(
+            title: "Этот раунд окончен!", // заголовок всплывающего окна
+            message: "Ваш результат ???", // текст во всплывающем окне
+            preferredStyle: .alert
+        ) // preferredStyle может быть .alert или .actionSheet
+
+        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) {  _ in
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            
+            let firstQuestion = self.questions[self.currentQuestionIndex] // 2
+            let viewModel = self.convert(model: firstQuestion)
+            self.show(quiz: viewModel)
+            self.imageView.layer.borderWidth = 0
+            
+        }
+        
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     private func dispatcher() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             // код, который мы хотим вызвать через 1 секунду
@@ -111,6 +134,7 @@ final class MovieQuizViewController: UIViewController {
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
             imageView.layer.borderWidth = 8
+            correctAnswers += 1
             dispatcher()
             
             
@@ -126,9 +150,10 @@ final class MovieQuizViewController: UIViewController {
     // приватный метод, который содержит логику перехода в один из сценариев
     // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questions.count - 1 { // 1
-            // идём в состояние "Результат квиза"
-        } else { // 2
+        if currentQuestionIndex == questions.count - 1 {
+           
+          
+        } else {
             currentQuestionIndex += 1
             // идём в состояние "Вопрос показан"
             let nextQuestion = questions[currentQuestionIndex]
@@ -138,7 +163,7 @@ final class MovieQuizViewController: UIViewController {
         }
     }
     
-    
+  
     
     
     @IBOutlet private weak var imageView: UIImageView!
