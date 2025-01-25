@@ -100,12 +100,12 @@ final class MovieQuizViewController: UIViewController {
     private func show(quiz result: QuizResultsViewModel) {
         // создаём объекты всплывающего окна
         let alert = UIAlertController(
-            title: "Этот раунд окончен!", // заголовок всплывающего окна
-            message: "Ваш результат ???", // текст во всплывающем окне
+            title: result.title, // заголовок всплывающего окна
+            message: result.text, // текст во всплывающем окне
             preferredStyle: .alert
         ) // preferredStyle может быть .alert или .actionSheet
 
-        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) {  _ in
+        let action = UIAlertAction(title: result.buttonText, style: .default) {  _ in
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
@@ -125,6 +125,8 @@ final class MovieQuizViewController: UIViewController {
             // код, который мы хотим вызвать через 1 секунду
             self.showNextQuestionOrResults()
             self.imageView.layer.borderWidth = 0
+            self.yesButton.isEnabled = true
+            self.noButton.isEnabled = true
         }
     }
     
@@ -151,7 +153,11 @@ final class MovieQuizViewController: UIViewController {
     // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questions.count - 1 {
-           
+
+            show(quiz: QuizResultsViewModel(
+                title: "Этот раунд окончен!",
+                text: "Ваш результат: \(correctAnswers)/\(questions.count)",
+                buttonText: "Сыграть еще раз"))
           
         } else {
             currentQuestionIndex += 1
@@ -170,12 +176,17 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
     
+    @IBOutlet weak var noButton: UIButton!
+    @IBOutlet weak var yesButton: UIButton!
+    
     @IBAction private func yesButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == true)
+        yesButton.isEnabled = false
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == false)
+        noButton.isEnabled = false
     }
     
 }
