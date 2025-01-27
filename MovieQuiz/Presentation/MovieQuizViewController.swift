@@ -63,21 +63,21 @@ final class MovieQuizViewController: UIViewController {
     ]
     
     // Структура вопроса
-    struct QuizQuestion {
+    private struct QuizQuestion {
         let image: String
         let text: String
         let correctAnswer: Bool
     }
     
     // Структура вью модели одного вопроса
-    struct QuizStepViewModel {
+    private struct QuizStepViewModel {
         let image: UIImage
         let question: String
         let questionNumber: String
     }
     
     // Структура вью модели результата
-    struct QuizResultsViewModel {
+    private struct QuizResultsViewModel {
         let title: String
         let text: String
         let buttonText: String
@@ -91,7 +91,7 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.cornerRadius = 20
         
         // Вызываем функцию показа, на вход даем модель через функцию конвертирования на входе которой даем первый элемент массива с вопросами
-        show(quiz: convert(model: questions[0]))
+        show(quiz: convert(model: questions[currentQuestionIndex]))
     }
     
     
@@ -99,7 +99,7 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == true)
-        yesButton.isEnabled = false
+        changeButtonState(isEnabled: false)
         
         // Вызов метода виброотклика
         tapticFeedback()
@@ -107,7 +107,7 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction private func noButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == false)
-        noButton.isEnabled = false
+        changeButtonState(isEnabled: false)
         
         // Вызов метода виброотклика
         tapticFeedback()
@@ -164,8 +164,7 @@ final class MovieQuizViewController: UIViewController {
             self.imageView.layer.borderWidth = 0 // Делаем рамку нулевой, чтобы не отображалась на следующем вопросе
             
             // Деактивируем кнопки для предотвращения повторных нажатий перед показом следующего вопроса
-            self.yesButton.isEnabled = true
-            self.noButton.isEnabled = true
+            self.changeButtonState(isEnabled: true)
         }
     }
     
@@ -173,20 +172,17 @@ final class MovieQuizViewController: UIViewController {
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
-            imageView.layer.borderWidth = 8
             correctAnswers += 1
-            dispatcher()
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
-            imageView.layer.borderWidth = 8
-            dispatcher()
         }
+        imageView.layer.borderWidth = 8
+        dispatcher()
     }
     
     // Метод для переключения вопросов или показа результата
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questions.count - 1 {
-            
             show(quiz: QuizResultsViewModel(
                 title: "Этот раунд окончен!",
                 text: "Ваш результат: \(correctAnswers)/\(questions.count)",
@@ -200,6 +196,12 @@ final class MovieQuizViewController: UIViewController {
             
             show(quiz: viewModel)
         }
+    }
+    
+    // Метод включения/выключения кнопок
+    private func changeButtonState(isEnabled: Bool) {
+        noButton.isEnabled = isEnabled
+        yesButton.isEnabled = isEnabled
     }
     
     // Метод виброотклика
