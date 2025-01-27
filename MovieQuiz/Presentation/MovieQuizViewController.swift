@@ -10,8 +10,8 @@ final class MovieQuizViewController: UIViewController {
     
     @IBOutlet private weak var textLabel: UILabel!
     
-    @IBOutlet weak var noButton: UIButton!
-    @IBOutlet weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
+    @IBOutlet private weak var yesButton: UIButton!
     
     // MARK: - Private Properties
     
