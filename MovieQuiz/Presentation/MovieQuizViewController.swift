@@ -142,23 +142,27 @@ final class MovieQuizViewController: UIViewController {
             preferredStyle: .alert
         )
         
-        let action = UIAlertAction(title: result.buttonText, style: .default) {  _ in
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+                
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
             let firstQuestion = self.questions[self.currentQuestionIndex]
             let viewModel = self.convert(model: firstQuestion)
             self.show(quiz: viewModel)
-            self.imageView.layer.borderWidth = 0
         }
         
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
+        self.imageView.layer.borderWidth = 0
     }
     
     // Метод диспетчера
     private func dispatcher() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            
             // Код, который мы хотим вызвать через 1 секунду
             self.showNextQuestionOrResults()
             self.imageView.layer.borderWidth = 0 // Делаем рамку нулевой, чтобы не отображалась на следующем вопросе
