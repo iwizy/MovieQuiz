@@ -7,7 +7,7 @@
 
 import Foundation
 
-class QuestionFactory {
+class QuestionFactory: QuestionFactoryProtocol {
     // MARK: - Массив моковых вопросов
     private let questions: [QuizQuestion] = [
         QuizQuestion(
@@ -52,15 +52,11 @@ class QuestionFactory {
             correctAnswer: false)
     ]
     
-    
-    private func requestNextQuestion() -> QuizQuestion? { // 1
-        // 2
+    func requestNextQuestion() -> QuizQuestion? {
         guard let index = (0..<questions.count).randomElement() else {
             return nil
         }
-        
-        return questions[safe: index] // 3
+        return questions[safe: index]
     }
-    
     
 } // завершающая скобка класса

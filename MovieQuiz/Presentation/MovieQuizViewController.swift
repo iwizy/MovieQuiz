@@ -17,11 +17,12 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
     private var correctAnswers = 0 // Счетчик корректных вопросов
-    private let questionsAmount: Int = 10 // Общее количество вопросов
-    
+
+    private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactory = QuestionFactory()
     private var currentQuestion: QuizQuestion?
     
+
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,14 +31,25 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.cornerRadius = 20
         
         // Вызываем функцию показа, на вход даем модель через функцию конвертирования на входе которой даем первый элемент массива с вопросами
-        show(quiz: convert(model: questions[currentQuestionIndex]))
+        if let firstQuestion = questionFactory.requestNextQuestion() {
+            currentQuestion = firstQuestion
+            let viewModel = convert(model: firstQuestion)
+            show(quiz: viewModel)
+        }
     }
     
     
     // MARK: - IB Actions
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == true)
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        let giveAnswer = true
+        
+        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
         changeButtonState(isEnabled: false)
         
         // Вызов метода виброотклика
@@ -45,7 +57,14 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
-        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer == false)
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        let giveAnswer = false
+        
+        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
+        
         changeButtonState(isEnabled: false)
         
         // Вызов метода виброотклика
@@ -60,7 +79,7 @@ final class MovieQuizViewController: UIViewController {
         let questionStep = QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
     }
     
@@ -87,9 +106,12 @@ final class MovieQuizViewController: UIViewController {
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
-            let firstQuestion = self.questions[self.currentQuestionIndex]
-            let viewModel = self.convert(model: firstQuestion)
-            self.show(quiz: viewModel)
+            if let firstQuestion = self.questionFactory.requestNextQuestion() {
+                self.currentQuestion = firstQuestion
+                let viewModel = self.convert(model: firstQuestion)
+
+                self.show(quiz: viewModel)
+            }
         }
         
         alert.addAction(action)
@@ -125,19 +147,21 @@ final class MovieQuizViewController: UIViewController {
     
     // Метод для переключения вопросов или показа результата
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questions.count - 1 {
+        if currentQuestionIndex == questionsAmount - 1 {
             show(quiz: QuizResultsViewModel(
                 title: "Этот раунд окончен!",
-                text: "Ваш результат: \(correctAnswers)/\(questions.count)",
+                text: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
                 buttonText: "Сыграть еще раз"))
             
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
-            let nextQuestion = questions[currentQuestionIndex]
-            let viewModel = convert(model: nextQuestion)
-            
-            show(quiz: viewModel)
+            if let nextQuestion = questionFactory.requestNextQuestion() {
+                currentQuestion = nextQuestion
+                let viewModel = convert(model: nextQuestion)
+
+                show(quiz: viewModel)
+            }
         }
     }
     
