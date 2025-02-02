@@ -17,18 +17,19 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
     private var correctAnswers = 0 // Счетчик корректных вопросов
-
+    
     private let questionsAmount: Int = 10
-    private var questionFactory: QuestionFactory = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
     private var currentQuestion: QuizQuestion?
     
-
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
+        
         
         // Вызываем функцию показа, на вход даем модель через функцию конвертирования на входе которой даем первый элемент массива с вопросами
         if let firstQuestion = questionFactory.requestNextQuestion() {
@@ -57,16 +58,12 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
-        
         guard let currentQuestion = currentQuestion else {
             return
         }
         let giveAnswer = false
-        
         showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
-        
         changeButtonState(isEnabled: false)
-        
         // Вызов метода виброотклика
         tapticFeedback()
     }
@@ -88,7 +85,8 @@ final class MovieQuizViewController: UIViewController {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
-        imageView.layer.borderWidth = 8
+        
+        imageView.layer.borderWidth = 0
     }
     
     // Метод показа результата
@@ -102,14 +100,14 @@ final class MovieQuizViewController: UIViewController {
         
         let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
             guard let self = self else { return }
-                
+            
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
             if let firstQuestion = self.questionFactory.requestNextQuestion() {
                 self.currentQuestion = firstQuestion
                 let viewModel = self.convert(model: firstQuestion)
-
+                
                 self.show(quiz: viewModel)
             }
         }
@@ -159,7 +157,7 @@ final class MovieQuizViewController: UIViewController {
             if let nextQuestion = questionFactory.requestNextQuestion() {
                 currentQuestion = nextQuestion
                 let viewModel = convert(model: nextQuestion)
-
+                
                 show(quiz: viewModel)
             }
         }
