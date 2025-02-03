@@ -1,7 +1,7 @@
 import UIKit
 
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - IB Outlets
     
@@ -19,7 +19,7 @@ final class MovieQuizViewController: UIViewController {
     private var correctAnswers = 0 // Счетчик корректных вопросов
     
     private let questionsAmount: Int = 10
-    private var questionFactory: QuestionFactoryProtocol = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
     
@@ -31,14 +31,27 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.cornerRadius = 20
         
         
+        questionFactory = QuestionFactory(delegate: self)
+        
+        
         // Вызываем функцию показа, на вход даем модель через функцию конвертирования на входе которой даем первый элемент массива с вопросами
-        if let firstQuestion = questionFactory.requestNextQuestion() {
-            currentQuestion = firstQuestion
-            let viewModel = convert(model: firstQuestion)
-            show(quiz: viewModel)
-        }
+        questionFactory?.requestNextQuestion()
     }
     
+    // MARK: - QuestionFactoryDelegate
+    
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else {
+            return
+        }
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
     
     // MARK: - IB Actions
     
@@ -104,12 +117,7 @@ final class MovieQuizViewController: UIViewController {
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             
-            if let firstQuestion = self.questionFactory.requestNextQuestion() {
-                self.currentQuestion = firstQuestion
-                let viewModel = self.convert(model: firstQuestion)
-                
-                self.show(quiz: viewModel)
-            }
+            questionFactory?.requestNextQuestion()
         }
         
         alert.addAction(action)
@@ -154,12 +162,7 @@ final class MovieQuizViewController: UIViewController {
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
-            if let nextQuestion = questionFactory.requestNextQuestion() {
-                currentQuestion = nextQuestion
-                let viewModel = convert(model: nextQuestion)
-                
-                show(quiz: viewModel)
-            }
+            self.questionFactory?.requestNextQuestion()
         }
     }
     

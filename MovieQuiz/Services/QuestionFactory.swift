@@ -52,11 +52,21 @@ class QuestionFactory: QuestionFactoryProtocol {
             correctAnswer: false)
     ]
     
-    func requestNextQuestion() -> QuizQuestion? {
+    // делегат
+    weak var delegate: QuestionFactoryDelegate?
+    
+    
+    // метод запроса следующего вопроса
+    func requestNextQuestion() {
         guard let index = (0..<questions.count).randomElement() else {
-            return nil
+            delegate?.didReceiveNextQuestion(question: nil)
+            return
         }
-        return questions[safe: index]
+
+        let question = questions[safe: index]
+        delegate?.didReceiveNextQuestion(question: question)
     }
+    
+    
     
 } // завершающая скобка класса
