@@ -2,8 +2,7 @@
 //  QuizQuestion.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 02.02.2025.
-//
+//  Структура модели вопроса
 
 import Foundation
 

@@ -2,12 +2,15 @@
 //  QuestionFactory.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 01.02.2025.
-//
+//  Класс фабрики вопросов
 
 import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
+    
+    // MARK: - Создание переменной delegate c опциональным типом QuestionFactoryDelegate
+    weak var delegate: QuestionFactoryDelegate?
+    
     // MARK: - Массив моковых вопросов
     private let questions: [QuizQuestion] = [
         QuizQuestion(
@@ -52,23 +55,26 @@ class QuestionFactory: QuestionFactoryProtocol {
             correctAnswer: false)
     ]
     
-    
+    // MARK: - Инициализация делегата
     init(delegate: QuestionFactoryDelegate) {
-            self.delegate = delegate
-        }
-    
-    // делегат
-    weak var delegate: QuestionFactoryDelegate?
+        self.delegate = delegate
+    }
     
     
-    // метод запроса следующего вопроса
+    // MARK: - Метод запроса следующего вопроса
     func requestNextQuestion() {
+        
+        // Распаковка. Говорим, что индекс у нас в диапазоне от 0 до количества вопросов, применяем метод выбора случайного элемента
         guard let index = (0..<questions.count).randomElement() else {
+            
+            // обращаемся опционально к делегату и к его методу, если вопросы не получены - прерываем
             delegate?.didReceiveNextQuestion(question: nil)
             return
         }
-
+        // Получаем индекс вопроса
         let question = questions[safe: index]
+        
+        // Вызываем делегат и передаем туда вопрос, если он был получен
         delegate?.didReceiveNextQuestion(question: question)
     }
     

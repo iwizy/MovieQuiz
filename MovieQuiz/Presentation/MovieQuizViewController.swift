@@ -4,23 +4,20 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - IB Outlets
-    
     @IBOutlet private weak var imageView: UIImageView!
-    @IBOutlet private weak var counterLabel: UILabel!
     
+    @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var textLabel: UILabel!
     
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
     
     // MARK: - Private Properties
-    
     private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
     private var correctAnswers = 0 // Счетчик корректных вопросов
-    
-    private let questionsAmount: Int = 10
-    private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
+    private let questionsAmount: Int = 10 // константа с общим количеством вопросов
+    private var questionFactory: QuestionFactoryProtocol? // переменная фабрики с опциональным типом протокола фабрики
+    private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     
     
     // MARK: - Overrides Methods
@@ -30,16 +27,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
         
-        
+        // Инициализируем делегат
         questionFactory = QuestionFactory(delegate: self)
         
-        
-        // Вызываем функцию показа, на вход даем модель через функцию конвертирования на входе которой даем первый элемент массива с вопросами
+        // Вызываем метод фабрики вопросов для показа вопроса
         questionFactory?.requestNextQuestion()
     }
     
     // MARK: - QuestionFactoryDelegate
-    
+    //
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
@@ -56,13 +52,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - IB Actions
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        
+        // распаковываем, прерываем, если вопроса нет
         guard let currentQuestion = currentQuestion else {
             return
         }
         
         let giveAnswer = true
-        
         showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
         changeButtonState(isEnabled: false)
         
@@ -71,12 +66,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
+        // распаковываем, прерываем, если вопроса нет
         guard let currentQuestion = currentQuestion else {
             return
         }
         let giveAnswer = false
         showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
         changeButtonState(isEnabled: false)
+        
         // Вызов метода виброотклика
         tapticFeedback()
     }

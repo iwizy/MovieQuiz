@@ -2,9 +2,10 @@
 //  QuestionFactoryDelegate.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 02.02.2025.
-//
+//  Делегат фабрики вопросов
 
 protocol QuestionFactoryDelegate: AnyObject {
+    
+    // Метод, который вызывается когда вопрос получен
     func didReceiveNextQuestion(question: QuizQuestion?)
 }
