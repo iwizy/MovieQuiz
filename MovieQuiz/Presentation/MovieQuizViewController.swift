@@ -1,3 +1,10 @@
+//
+//  MovieQuizViewController.swift
+//  MovieQuiz
+//
+//  Главный контроллер
+
+
 import UIKit
 
 
@@ -18,24 +25,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10 // константа с общим количеством вопросов
     private var questionFactory: QuestionFactoryProtocol? // переменная фабрики с опциональным типом протокола фабрики
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
-    
+    private var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
         
-        // Инициализируем делегат
-        questionFactory = QuestionFactory(delegate: self)
-        
-        // Вызываем метод фабрики вопросов для показа вопроса
-        questionFactory?.requestNextQuestion()
+        questionFactory = QuestionFactory(delegate: self) // Инициализируем делегат
+        questionFactory?.requestNextQuestion() // Вызываем метод фабрики вопросов для показа вопроса
+        alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
     }
     
     // MARK: - QuestionFactoryDelegate
-    //
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
@@ -101,6 +104,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // Метод показа результата
     private func show(quiz result: QuizResultsViewModel) {
+        
         // Создаём объекты всплывающего окна
         let alert = UIAlertController(
             title: result.title,
@@ -151,11 +155,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Метод для переключения вопросов или показа результата
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
-            show(quiz: QuizResultsViewModel(
+            let model = AlertModel( // Создаем переменную model c типом AlertModel и инициализируем
                 title: "Этот раунд окончен!",
-                text: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
-                buttonText: "Сыграть еще раз"))
-            
+                message: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
+                buttonText: "Сыграть еще раз")
+            { [weak self] in // Замыкание, где выполняем нужные действия
+                guard let self = self else { return }
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                self.questionFactory?.requestNextQuestion()
+            }
+            alertBox?.showAlert(model: model) // Вызов алерта
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
@@ -163,7 +173,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
     }
     
-    // Метод включения/выключения кнопок
+    // Метод включения / выключения кнопок
     private func changeButtonState(isEnabled: Bool) {
         noButton.isEnabled = isEnabled
         yesButton.isEnabled = isEnabled

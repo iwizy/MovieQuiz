@@ -1,0 +1,34 @@
+//
+//  AlertPresenter.swift
+//  MovieQuiz
+//
+//  Класс Алерта
+
+import UIKit
+
+class AlertPresenter {
+    // Создаем опциональную переменную с типом UIViewController.
+    let viewController: UIViewController?
+    
+    // Инициализируем
+    init(viewController: UIViewController?) {
+        self.viewController = viewController
+    }
+    
+    func showAlert(model: AlertModel) {
+        // создаём объекты всплывающего окна
+        let alert = UIAlertController(
+            title: model.title, // заголовок всплывающего окна
+            message: model.message, // текст во всплывающем окне
+            preferredStyle: .alert
+        ) // preferredStyle может быть .alert или .actionSheet
+        let action = UIAlertAction(title: model.buttonText, style: .default) { [weak self] _ in
+            guard self != nil else { return }
+            model.completion?()
+        }
+        alert.addAction(action)
+        viewController?.present(alert, animated: true, completion: nil)
+        
+    }
+    
+}

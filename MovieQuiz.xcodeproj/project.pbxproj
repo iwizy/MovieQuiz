@@ -13,6 +13,8 @@
 		847C33B32D4EDC0A003D1A3A /* QuestionFactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C33B22D4EDBFA003D1A3A /* QuestionFactoryProtocol.swift */; };
 		847C33B52D4EDC7A003D1A3A /* QuizQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C33B42D4EDC66003D1A3A /* QuizQuestion.swift */; };
 		847C33B72D4F9B3E003D1A3A /* QuestionFactoryDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C33B62D4F9B3A003D1A3A /* QuestionFactoryDelegate.swift */; };
+		847C33B92D515E65003D1A3A /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C33B82D515E60003D1A3A /* AlertPresenter.swift */; };
+		847C33BB2D515E77003D1A3A /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C33BA2D515E75003D1A3A /* AlertModel.swift */; };
 		AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB12831907B00B3E448 /* AppDelegate.swift */; };
 		AD1ABAB42831907B00B3E448 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */; };
 		AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */; };
@@ -31,6 +33,8 @@
 		847C33B22D4EDBFA003D1A3A /* QuestionFactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactoryProtocol.swift; sourceTree = "<group>"; };
 		847C33B42D4EDC66003D1A3A /* QuizQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizQuestion.swift; sourceTree = "<group>"; };
 		847C33B62D4F9B3A003D1A3A /* QuestionFactoryDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactoryDelegate.swift; sourceTree = "<group>"; };
+		847C33B82D515E60003D1A3A /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		847C33BA2D515E75003D1A3A /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		AD1ABAAE2831907B00B3E448 /* MovieQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD1ABAB12831907B00B3E448 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AD1ABAB32831907B00B3E448 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,6 +66,7 @@
 		611342392B701CF6003FC2A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				847C33BA2D515E75003D1A3A /* AlertModel.swift */,
 				847C33B42D4EDC66003D1A3A /* QuizQuestion.swift */,
 				847C33AE2D4EB688003D1A3A /* QuizResultsViewModel.swift */,
 				847C33AC2D4EB67B003D1A3A /* QuizStepViewModel.swift */,
@@ -82,6 +87,7 @@
 		8F4738322848DE2A005DF65E /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				847C33B82D515E60003D1A3A /* AlertPresenter.swift */,
 				AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */,
 				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 			);
@@ -218,9 +224,11 @@
 				AD7AFA552836189F00399704 /* Array+Extensions.swift in Sources */,
 				847C33B32D4EDC0A003D1A3A /* QuestionFactoryProtocol.swift in Sources */,
 				847C33B72D4F9B3E003D1A3A /* QuestionFactoryDelegate.swift in Sources */,
+				847C33BB2D515E77003D1A3A /* AlertModel.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				847C33AD2D4EB67E003D1A3A /* QuizStepViewModel.swift in Sources */,
 				847C33AB2D4EB267003D1A3A /* QuestionFactory.swift in Sources */,
+				847C33B92D515E65003D1A3A /* AlertPresenter.swift in Sources */,
 				847C33B52D4EDC7A003D1A3A /* QuizQuestion.swift in Sources */,
 				AD77F5742857F8810062FB14 /* Date+Extensions.swift in Sources */,
 				AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */,
