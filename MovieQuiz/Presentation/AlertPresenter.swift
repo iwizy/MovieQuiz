@@ -8,7 +8,7 @@ import UIKit
 
 class AlertPresenter {
     // Создаем опциональную переменную с типом UIViewController.
-    let viewController: UIViewController?
+    private weak var viewController: UIViewController?
     
     // Инициализируем
     init(viewController: UIViewController?) {
