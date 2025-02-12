@@ -26,6 +26,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol? // переменная фабрики с опциональным типом протокола фабрики
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     private var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
+    private var statisticService: StatisticServiceProtocol?
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -36,6 +37,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory = QuestionFactory(delegate: self) // Инициализируем делегат
         questionFactory?.requestNextQuestion() // Вызываем метод фабрики вопросов для показа вопроса
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
+        statisticService = StatisticService()
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -155,9 +157,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Метод для переключения вопросов или показа результата
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
+            statisticService?.store(correct: correctAnswers, total: questionsAmount)
             let model = AlertModel( // Создаем переменную model c типом AlertModel и инициализируем
                 title: "Этот раунд окончен!",
-                message: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
+                message: """
+                         Ваш результат: \(correctAnswers)/\(questionsAmount)
+                         Количество сыгранных квизов: \(statisticService?.gamesCount ?? 1)
+                         Рекорд: \(statisticService?.bestGame.correct ?? correctAnswers)/\(statisticService?.bestGame.total ?? questionsAmount) (\(statisticService?.bestGame.date ?? Date())
+                         Средняя точность: \(statisticService?.totalAccuracy ?? 0)
+                         """,
                 buttonText: "Сыграть еще раз")
             { [weak self] in // Замыкание, где выполняем нужные действия
                 guard let self = self else { return }

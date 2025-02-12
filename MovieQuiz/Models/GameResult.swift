@@ -12,7 +12,7 @@ struct GameResult {
     let total: Int
     let date: Date
     
-    func compareGames(game: GameResult) -> Bool {
+    func bestGame(game: GameResult) -> Bool {
        correct > game.correct
     }
 }
