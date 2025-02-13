@@ -2,8 +2,7 @@
 //  GameResult.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 10.02.2025.
-//
+// Модель результатов игры
 
 import Foundation
 

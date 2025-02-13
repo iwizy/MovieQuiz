@@ -163,7 +163,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 message: """
                          Ваш результат: \(correctAnswers)/\(questionsAmount)
                          Количество сыгранных квизов: \(statisticService?.gamesCount ?? 1)
-                         Рекорд: \(statisticService?.bestGame.correct ?? correctAnswers)/\(statisticService?.bestGame.total ?? questionsAmount) (\(statisticService?.bestGame.date.dateTimeString ?? Date().dateTimeString)
+                         Рекорд: \(statisticService?.bestGame.correct ?? correctAnswers)/\(statisticService?.bestGame.total ?? questionsAmount) (\(statisticService?.bestGame.date.dateTimeString ?? Date().dateTimeString))
                          Средняя точность: \(String(format: "%.2f", statisticService?.totalAccuracy ?? 0))%
                          """,
                 buttonText: "Сыграть еще раз")
