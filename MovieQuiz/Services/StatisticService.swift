@@ -20,32 +20,20 @@ final class StatisticService: StatisticServiceProtocol {
     
     // переменная с общим количеством заданных вопросов
     private var totalQuestionsCount: Int {
-        get {
-            return storage.integer(forKey: Keys.totalQuestionsCount.rawValue)
-        }
-        set {
-            storage.set(newValue, forKey: Keys.totalQuestionsCount.rawValue)
-        }
+        get { storage.integer(forKey: Keys.totalQuestionsCount.rawValue) }
+        set { storage.set(newValue, forKey: Keys.totalQuestionsCount.rawValue) }
     }
     
     // переменная с общим количеством правильных ответов
     private var totalCorrectAnswers: Int {
-        get {
-            return storage.integer(forKey: Keys.totalCorrectAnswers.rawValue)
-        }
-        set {
-            storage.set(newValue, forKey: Keys.totalCorrectAnswers.rawValue)
-        }
+        get { storage.integer(forKey: Keys.totalCorrectAnswers.rawValue) }
+        set { storage.set(newValue, forKey: Keys.totalCorrectAnswers.rawValue) }
     }
     
     // общее количество сыгранных игр
     var gamesCount: Int {
-        get {
-            storage.integer(forKey: Keys.gamesCount.rawValue)
-        }
-        set {
-            storage.set(newValue, forKey: Keys.gamesCount.rawValue)
-        }
+        get { storage.integer(forKey: Keys.gamesCount.rawValue) }
+        set { storage.set(newValue, forKey: Keys.gamesCount.rawValue) }
     }
     
     // переменная лучшей игры с типом модели GameResult
@@ -54,11 +42,10 @@ final class StatisticService: StatisticServiceProtocol {
             let correct = storage.integer(forKey: Keys.bestGameCorrect.rawValue)
             let total = storage.integer(forKey: Keys.bestGameTotal.rawValue)
             let date = storage.object(forKey: Keys.bestGameDate.rawValue) as? Date ?? Date()
-            let gameResult = GameResult( // переменная результата игры, на вход принимает модель и потом возвращает значение
+            return GameResult( // переменная результата игры, на вход принимает модель и потом возвращает значение
                 correct: correct,
                 total: total,
                 date: date)
-            return gameResult
         }
         set { // проверяем лучшая ли игра или нет
             let current = bestGame
@@ -96,6 +83,5 @@ final class StatisticService: StatisticServiceProtocol {
         }
         
     }
-    
   
 }

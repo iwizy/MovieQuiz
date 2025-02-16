@@ -6,7 +6,7 @@
 
 import UIKit
 
-class AlertPresenter {
+final class AlertPresenter {
     // Создаем опциональную переменную с типом UIViewController.
     private weak var viewController: UIViewController?
     
@@ -22,8 +22,7 @@ class AlertPresenter {
             message: model.message, // текст во всплывающем окне
             preferredStyle: .alert
         ) // preferredStyle может быть .alert или .actionSheet
-        let action = UIAlertAction(title: model.buttonText, style: .default) { [weak self] _ in
-            guard self != nil else { return }
+        let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
             model.completion?()
         }
         alert.addAction(action)

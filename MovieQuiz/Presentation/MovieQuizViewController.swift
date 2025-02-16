@@ -42,9 +42,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
-            return
-        }
+        guard let question else { return }
         
         currentQuestion = question
         let viewModel = convert(model: question)
@@ -58,9 +56,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
         // распаковываем, прерываем, если вопроса нет
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
+        guard let currentQuestion else { return }
         
         let giveAnswer = true
         showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
@@ -115,7 +111,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         )
         
         let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
@@ -131,7 +127,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Метод диспетчера
     private func dispatcher() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             
             // Код, который мы хотим вызвать через 1 секунду
             self.showNextQuestionOrResults()
@@ -168,7 +164,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                          """,
                 buttonText: "Сыграть еще раз")
             { [weak self] in // Замыкание, где выполняем нужные действия
-                guard let self = self else { return }
+                guard let self else { return }
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 self.questionFactory?.requestNextQuestion()

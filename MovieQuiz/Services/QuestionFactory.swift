@@ -6,7 +6,7 @@
 
 import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     
     // MARK: - Создание переменной delegate c опциональным типом QuestionFactoryDelegate
     weak var delegate: QuestionFactoryDelegate?
@@ -78,6 +78,4 @@ class QuestionFactory: QuestionFactoryProtocol {
         delegate?.didReceiveNextQuestion(question: question)
     }
     
-    
-    
-} // завершающая скобка класса
+}
