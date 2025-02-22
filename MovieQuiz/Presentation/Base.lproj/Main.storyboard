@@ -47,7 +47,7 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IJo-xB-AfQ" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="43.666666666666742" width="362" height="543"/>
+                                        <rect key="frame" x="0.0" y="43.666666666666686" width="362" height="543"/>
                                         <color key="backgroundColor" name="YP White"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="IJo-xB-AfQ" secondAttribute="height" multiplier="2:3" id="n3b-aF-9DP"/>
@@ -103,17 +103,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="HuY-ME-75u">
+                                <rect key="frame" x="191" y="427" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Wbm-ne-6Vi" secondAttribute="trailing" constant="20" id="0n6-1P-BgE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Wbm-ne-6Vi" secondAttribute="bottom" id="6JR-xN-y2b"/>
+                            <constraint firstItem="HuY-ME-75u" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="8Lg-A0-F6P"/>
+                            <constraint firstItem="HuY-ME-75u" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="OGa-T1-7SM"/>
                             <constraint firstItem="Wbm-ne-6Vi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="kfq-Jn-Mv0"/>
                             <constraint firstItem="Wbm-ne-6Vi" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="yAw-5s-opo"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="HuY-ME-75u" id="iIy-TB-xbS"/>
                         <outlet property="counterLabel" destination="fEn-xa-HZ3" id="HBI-6d-VUv"/>
                         <outlet property="imageView" destination="IJo-xB-AfQ" id="Hcl-3x-eTo"/>
                         <outlet property="noButton" destination="FlA-5T-uJj" id="prJ-1Y-BX9"/>
