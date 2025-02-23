@@ -2,8 +2,7 @@
 //  MoviesLoader.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 23.02.2025.
-//
+//  Загрузчик данных с сервера
 
 import Foundation
 
@@ -18,7 +17,7 @@ struct MoviesLoader: MoviesLoading {
     // MARK: - URL
     private var mostPopularMoviesUrl: URL {
         // Если мы не смогли преобразовать строку в URL, то приложение упадёт с ошибкой
-        guard let url = URL(string: "https://tv-api.com/en/API/MostPopularTVs/k_zcuw1ytf") else {
+        guard let url = URL(string: "https://tv-api.com/en/API/Top250Movies/k_zcuw1ytf") else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")
         }
         return url

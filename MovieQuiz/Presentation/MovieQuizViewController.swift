@@ -178,7 +178,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
-            self.questionFactory?.requestNextQuestion()
+            // self.questionFactory?.requestNextQuestion()
+            didLoadDataFromServer()
         }
     }
     
@@ -187,10 +188,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         hideLoadingIndicator() // скрываем индикатор загрузки
         
         // создайте и покажите алерт
-        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз") { [weak self] in
-            guard let self = self else { return }
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
+            self.questionFactory?.loadData()
             self.questionFactory?.requestNextQuestion()
         }
         
@@ -198,12 +201,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
     }
     
-    // метод
+    // метод на случай успешной загрузки
     func didLoadDataFromServer() {
         activityIndicator.isHidden = true // скрываем индикатор загрузки
         questionFactory?.requestNextQuestion()
     }
-
+    
+    // метод в случае ошибки
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
     }
@@ -216,7 +220,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // метод скрытия индикатора загрузки
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true // говорим, что индикатор загрузки не скрыт
+        activityIndicator.isHidden = true // говорим, что индикатор загрузки скрыт
         activityIndicator.stopAnimating() // выключаем анимацию
     }
     
