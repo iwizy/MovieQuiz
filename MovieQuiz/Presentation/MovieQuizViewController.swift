@@ -36,10 +36,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
         
-        questionFactory = QuestionFactory(delegate: self) // Инициализируем делегат
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self) // Инициализируем делегат
         questionFactory?.requestNextQuestion() // Вызываем метод фабрики вопросов для показа вопроса
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
         statisticService = StatisticService()
+        
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -87,7 +90,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // Метод конвертирования модели мок-вопроса во вью модель вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
@@ -193,6 +196,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         alertBox?.showAlert(model: model)
         
+    }
+    
+    // метод
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
     
     // метод показа индикатора загрузки
