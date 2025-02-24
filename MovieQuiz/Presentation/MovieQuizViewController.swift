@@ -84,6 +84,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         tapticFeedback()
     }
     
+    // MARK: - Public Methods
+    
+    // метод на случай успешной загрузки
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    
+    // метод в случае ошибки
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
     
     // MARK: - Private Methods
     
@@ -199,17 +212,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         alertBox?.showAlert(model: model)
         
-    }
-    
-    // метод на случай успешной загрузки
-    func didLoadDataFromServer() {
-        activityIndicator.isHidden = true // скрываем индикатор загрузки
-        questionFactory?.requestNextQuestion()
-    }
-    
-    // метод в случае ошибки
-    func didFailToLoadData(with error: Error) {
-        showNetworkError(message: error.localizedDescription)
     }
     
     // метод показа индикатора загрузки
