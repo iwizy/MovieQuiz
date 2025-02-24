@@ -19,7 +19,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private Properties
     private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
@@ -43,6 +43,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         showLoadingIndicator()
         questionFactory?.loadData()
+    }
+    
+    // MARK: - Public Methods
+    
+    // метод на случай успешной загрузки
+    func didLoadDataFromServer() {
+        activityIndicator.stopAnimating() // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    
+    // метод в случае ошибки
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -83,20 +96,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // Вызов метода виброотклика
         tapticFeedback()
     }
-    
-    // MARK: - Public Methods
-    
-    // метод на случай успешной загрузки
-    func didLoadDataFromServer() {
-        activityIndicator.isHidden = true // скрываем индикатор загрузки
-        questionFactory?.requestNextQuestion()
-    }
-    
-    // метод в случае ошибки
-    func didFailToLoadData(with error: Error) {
-        showNetworkError(message: error.localizedDescription)
-    }
-    
     
     // MARK: - Private Methods
     
@@ -191,7 +190,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
-            // self.questionFactory?.requestNextQuestion()
             didLoadDataFromServer()
         }
     }
@@ -207,7 +205,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
             self.questionFactory?.loadData()
-            self.questionFactory?.requestNextQuestion()
         }
         
         alertBox?.showAlert(model: model)
@@ -216,13 +213,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // метод показа индикатора загрузки
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
         activityIndicator.startAnimating() // включаем анимацию
     }
     
     // метод скрытия индикатора загрузки
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true // говорим, что индикатор загрузки скрыт
         activityIndicator.stopAnimating() // выключаем анимацию
     }
     
