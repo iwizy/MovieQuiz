@@ -7,7 +7,7 @@
 import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
-    
+
     private let moviesLoader: MoviesLoading
     
     // MARK: - Создание переменной delegate c опциональным типом QuestionFactoryDelegate
@@ -37,6 +37,10 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
             } catch {
                 print("Failed to load image")
+                DispatchQueue.main.async { [weak self] in // кидаем в основной поток, так как интерфейс
+                        guard let self else { return }
+                        self.delegate?.didFailToLoadImage(with: error) // Уведомляем делегат об ошибке
+                    }
                 return
             }
             

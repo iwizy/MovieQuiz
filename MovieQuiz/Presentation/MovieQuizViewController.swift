@@ -58,6 +58,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showNetworkError(message: error.localizedDescription)
     }
     
+    // метод показа алерта в случае ошибки загрузки картинки
+    func didFailToLoadImage(with error: Error) {
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки изображения", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.questionFactory?.loadData()
+        }
+        
+        alertBox?.showAlert(model: model)
+    }
+    
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question else { return }
@@ -232,5 +243,4 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
-    
 }
