@@ -7,6 +7,6 @@
 import Foundation
 
 protocol QuestionFactoryProtocol {
-    // Метод запроса следующего вопроса
-    func requestNextQuestion()
+    func requestNextQuestion() // Метод запроса следующего вопроса
+    func loadData() // метод загрузки данных
 }

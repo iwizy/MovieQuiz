@@ -19,6 +19,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var yesButton: UIButton!
     
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    
     // MARK: - Private Properties
     private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
     private var correctAnswers = 0 // Счетчик корректных вопросов
@@ -34,10 +36,37 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
         
-        questionFactory = QuestionFactory(delegate: self) // Инициализируем делегат
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self) // Инициализируем делегат
         questionFactory?.requestNextQuestion() // Вызываем метод фабрики вопросов для показа вопроса
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
         statisticService = StatisticService()
+        
+        showLoadingIndicator()
+        questionFactory?.loadData()
+    }
+    
+    // MARK: - Public Methods
+    
+    // метод на случай успешной загрузки
+    func didLoadDataFromServer() {
+        activityIndicator.stopAnimating() // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    
+    // метод в случае ошибки
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
+    // метод показа алерта в случае ошибки загрузки картинки
+    func didFailToLoadImage(with error: Error) {
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки изображения", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.questionFactory?.loadData()
+        }
+        
+        alertBox?.showAlert(model: model)
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -79,13 +108,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         tapticFeedback()
     }
     
-    
     // MARK: - Private Methods
     
     // Метод конвертирования модели мок-вопроса во вью модель вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
@@ -173,8 +201,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         } else {
             currentQuestionIndex += 1
             // Идём в состояние "Вопрос показан"
-            self.questionFactory?.requestNextQuestion()
+            didLoadDataFromServer()
         }
+    }
+    
+    // метода показа сообщения об ошибке
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        // создайте и покажите алерт
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            self.questionFactory?.loadData()
+        }
+        
+        alertBox?.showAlert(model: model)
+        
+    }
+    
+    // метод показа индикатора загрузки
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating() // включаем анимацию
+    }
+    
+    // метод скрытия индикатора загрузки
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating() // выключаем анимацию
     }
     
     // Метод включения / выключения кнопок
@@ -188,5 +243,4 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
-    
 }
