@@ -26,6 +26,7 @@ final class AlertPresenter {
             model.completion?()
         }
         alert.addAction(action)
+        alert.view.accessibilityIdentifier = "endGameAlert"
         viewController?.present(alert, animated: true, completion: nil)
         
     }
