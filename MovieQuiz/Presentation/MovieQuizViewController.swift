@@ -22,9 +22,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private Properties
-    private var currentQuestionIndex = 0 // Стартовое значение индекса первого элемента массива вопросов
     private var correctAnswers = 0 // Счетчик корректных вопросов
-    private let questionsAmount: Int = 10 // константа с общим количеством вопросов
     private var questionFactory: QuestionFactoryProtocol? // переменная фабрики с опциональным типом протокола фабрики
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     private var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
@@ -133,7 +131,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
             guard let self else { return }
             
-            self.currentQuestionIndex = 0
+            self.presenter.resetQuestionIndex()
             self.correctAnswers = 0
             
             questionFactory?.requestNextQuestion()
@@ -172,26 +170,26 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // Метод для переключения вопросов или показа результата
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questionsAmount - 1 {
-            statisticService?.store(correct: correctAnswers, total: questionsAmount)
+        if presenter.isLastQuestion() {
+            statisticService?.store(correct: correctAnswers, total: presenter.questionsAmount)
             let model = AlertModel( // Создаем переменную model c типом AlertModel и инициализируем
                 title: "Этот раунд окончен!",
                 message: """
-                         Ваш результат: \(correctAnswers)/\(questionsAmount)
+                         Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)
                          Количество сыгранных квизов: \(statisticService?.gamesCount ?? 1)
-                         Рекорд: \(statisticService?.bestGame.correct ?? correctAnswers)/\(statisticService?.bestGame.total ?? questionsAmount) (\(statisticService?.bestGame.date.dateTimeString ?? Date().dateTimeString))
+                         Рекорд: \(statisticService?.bestGame.correct ?? correctAnswers)/\(statisticService?.bestGame.total ?? presenter.questionsAmount) (\(statisticService?.bestGame.date.dateTimeString ?? Date().dateTimeString))
                          Средняя точность: \(String(format: "%.2f", statisticService?.totalAccuracy ?? 0))%
                          """,
                 buttonText: "Сыграть еще раз")
             { [weak self] in // Замыкание, где выполняем нужные действия
                 guard let self else { return }
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 self.questionFactory?.requestNextQuestion()
             }
             alertBox?.showAlert(model: model) // Вызов алерта
         } else {
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             // Идём в состояние "Вопрос показан"
             didLoadDataFromServer()
         }
@@ -205,7 +203,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
         { [weak self] in
             guard let self else { return }
-            self.currentQuestionIndex = 0
+            self.presenter.resetQuestionIndex()
             self.correctAnswers = 0
             self.questionFactory?.loadData()
         }
