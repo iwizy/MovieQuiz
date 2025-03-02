@@ -29,6 +29,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     private var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
     private var statisticService: StatisticServiceProtocol?
+    private let presenter = MoviewQuizPresenter()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -74,7 +75,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question else { return }
         
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
@@ -109,15 +110,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     // MARK: - Private Methods
-    
-    // Метод конвертирования модели мок-вопроса во вью модель вопроса
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        let questionStep = QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-        return questionStep
-    }
     
     // Метод показа первого вопроса
     private func show(quiz step: QuizStepViewModel) {
