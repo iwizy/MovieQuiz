@@ -34,6 +34,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         super.viewDidLoad()
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
+        presenter.viewController = self
         
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self) // Инициализируем делегат
         questionFactory?.requestNextQuestion() // Вызываем метод фабрики вопросов для показа вопроса
@@ -83,15 +84,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - IB Actions
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        // распаковываем, прерываем, если вопроса нет
-        guard let currentQuestion else { return }
-        
-        let giveAnswer = true
-        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
-        changeButtonState(isEnabled: false)
-        
-        // Вызов метода виброотклика
-        tapticFeedback()
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked()
+        //changeButtonState(isEnabled: false)
+        //tapticFeedback()
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
@@ -157,7 +153,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     // Показ результата вопроса в виде рамки красного или зеленого цвета
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
             correctAnswers += 1

@@ -11,6 +11,9 @@ final class MoviewQuizPresenter {
     
     let questionsAmount: Int = 10 // константа с общим количеством вопросов
     private var currentQuestionIndex: Int = 0 // Стартовое значение индекса первого элемента массива вопросов
+    var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
+    
+    weak var viewController: MovieQuizViewController?
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
@@ -31,6 +34,12 @@ final class MoviewQuizPresenter {
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
+    }
+    
+    func yesButtonClicked() {
+        guard let currentQuestion else { return }
+        let giveAnswer = true
+        viewController?.showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
     }
     
 }
