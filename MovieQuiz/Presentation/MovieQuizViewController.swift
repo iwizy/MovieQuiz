@@ -24,7 +24,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Private Properties
     private var correctAnswers = 0 // Счетчик корректных вопросов
     private var questionFactory: QuestionFactoryProtocol? // переменная фабрики с опциональным типом протокола фабрики
-    private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
+    
     private var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
     private var statisticService: StatisticServiceProtocol?
     private let presenter = MoviewQuizPresenter()
@@ -71,27 +71,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question else { return }
-        
-        currentQuestion = question
-        let viewModel = presenter.convert(model: question)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
+        presenter.didReceiveNextQuestion(question: question)
     }
     
     // MARK: - IB Actions
     
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
+        
         presenter.yesButtonClicked()
         changeButtonState(isEnabled: false)
         tapticFeedback()
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
+        
         presenter.noButtonClicked()
         changeButtonState(isEnabled: false)
         tapticFeedback()
@@ -100,7 +93,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     // MARK: - Private Methods
     
     // Метод показа первого вопроса
-    private func show(quiz step: QuizStepViewModel) {
+    func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
