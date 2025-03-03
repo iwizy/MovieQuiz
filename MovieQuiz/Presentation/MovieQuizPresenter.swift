@@ -7,20 +7,59 @@
 
 import UIKit
 
-final class MoviewQuizPresenter {
+final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    let questionsAmount: Int = 10 // константа с общим количеством вопросов
+    // MARK: - Public Properties
+    
+    var correctAnswers: Int = 0
+    
+    // MARK: - Private Properties
+    
+    private let questionsAmount: Int = 10 // константа с общим количеством вопросов
     private var currentQuestionIndex: Int = 0 // Стартовое значение индекса первого элемента массива вопросов
-    var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     
-    weak var viewController: MovieQuizViewController?
+    private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
+    private var statisticService: StatisticServiceProtocol!
+    private var questionFactory: QuestionFactoryProtocol?
+    private weak var viewController: MovieQuizViewController?
+    
+    // MARK: - Initializers
+    
+    init(viewController: MovieQuizViewController) {
+        self.viewController = viewController
+        statisticService = StatisticService()
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        questionFactory?.loadData()
+        viewController.showLoadingIndicator()
+    }
+    
+    // MARK: - Public Methods
+    
+    func didFailToLoadData(with error: any Error) {
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.questionFactory?.loadData()
+        }
+        
+        self.viewController?.alertBox?.showAlert(model: model)
+    }
+    
+    
+    // MARK: - Private Methods
+    
+    func didLoadDataFromServer() {
+        viewController?.hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
     
-    func resetQuestionIndex() {
+    func restartGame() {
         currentQuestionIndex = 0
+        correctAnswers = 0
     }
     
     func switchToNextQuestion() {
@@ -47,7 +86,7 @@ final class MoviewQuizPresenter {
     private func didAnswer(isYes: Bool) {
         guard let currentQuestion else { return }
         let giveAnswer = isYes
-        viewController?.showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
@@ -58,6 +97,89 @@ final class MoviewQuizPresenter {
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.show(quiz: viewModel)
         }
+    }
+    
+    
+    private func showNextQuestionOrResults() {
+        if self.isLastQuestion() {
+            statisticService?.store(correct: correctAnswers, total: self.questionsAmount)
+            let model = AlertModel(
+                title: "Этот раунд окончен!",
+                message: """
+                         Ваш результат: \(correctAnswers)/\(questionsAmount)
+                         Количество сыгранных квизов: \(statisticService.gamesCount)
+                         Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
+                         Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+                         """,
+                buttonText: "Сыграть еще раз")
+            { [weak self] in
+                guard let self else { return }
+                self.restartGame()
+                self.questionFactory?.requestNextQuestion()
+            }
+            self.viewController?.alertBox?.showAlert(model: model)
+            
+        } else {
+            self.switchToNextQuestion()
+            didLoadDataFromServer()
+        }
+    }
+    
+    // метода показа сообщения об ошибке
+    func showNetworkError(message: String) {
+        viewController?.hideLoadingIndicator() // скрываем индикатор загрузки
+        
+        // создайте и покажите алерт
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.restartGame()
+            self.questionFactory?.loadData()
+        }
+        
+        self.viewController?.alertBox?.showAlert(model: model)
+        
+    }
+    
+    // метод показа алерта в случае ошибки загрузки картинки
+    func didFailToLoadImage(with error: Error) {
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки изображения", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.questionFactory?.loadData()
+        }
+        
+        self.viewController?.alertBox?.showAlert(model: model)
+    }
+    
+    // Метод диспетчера
+    private func dispatcher() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self else { return }
+            
+            
+            self.showNextQuestionOrResults()
+            viewController?.resetBorder()
+            
+            // Делаем рамку нулевой, чтобы не отображалась на следующем вопросе
+            viewController?.changeButtonState(isEnabled: true)
+        }
+    }
+    
+    // Показ результата вопроса в виде рамки красного или зеленого цвета
+    func showAnswerResult(isCorrect: Bool) {
+        
+        if isCorrect {
+            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+            correctAnswers += 1
+        } else {
+            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+        }
+        
+        
+        
+        
+        dispatcher()
     }
     
 }
