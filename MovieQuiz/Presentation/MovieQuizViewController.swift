@@ -86,16 +86,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBAction private func yesButtonClicked(_ sender: Any) {
         presenter.currentQuestion = currentQuestion
         presenter.yesButtonClicked()
-        //changeButtonState(isEnabled: false)
-        //tapticFeedback()
+        changeButtonState(isEnabled: false)
+        tapticFeedback()
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
         presenter.currentQuestion = currentQuestion
         presenter.noButtonClicked()
-        
-        //changeButtonState(isEnabled: false)
-        //tapticFeedback()
+        changeButtonState(isEnabled: false)
+        tapticFeedback()
     }
     
     // MARK: - Private Methods
