@@ -91,16 +91,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     @IBAction private func noButtonClicked(_ sender: Any) {
-        // распаковываем, прерываем, если вопроса нет
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        let giveAnswer = false
-        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
-        changeButtonState(isEnabled: false)
+        presenter.currentQuestion = currentQuestion
+        presenter.noButtonClicked()
         
-        // Вызов метода виброотклика
-        tapticFeedback()
+        //changeButtonState(isEnabled: false)
+        //tapticFeedback()
     }
     
     // MARK: - Private Methods
