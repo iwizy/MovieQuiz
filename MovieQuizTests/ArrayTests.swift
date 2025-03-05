@@ -2,8 +2,7 @@
 //  ArrayTests.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 27.02.2025.
-//
+//  Тест для хелпера массива
 
 import Foundation
 import XCTest

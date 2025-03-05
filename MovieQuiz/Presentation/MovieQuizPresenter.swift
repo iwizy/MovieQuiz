@@ -21,11 +21,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     private var statisticService: StatisticServiceProtocol!
     private var questionFactory: QuestionFactoryProtocol?
-    private weak var viewController: MovieQuizViewController?
+    // private weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewControllerProtocol?
     
     // MARK: - Initializers
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         statisticService = StatisticService()
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
@@ -175,9 +176,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         } else {
             viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
         }
-        
-        
-        
         
         dispatcher()
     }

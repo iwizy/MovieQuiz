@@ -8,7 +8,9 @@
 import UIKit
 
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
+    
+    
     
     // MARK: - IB Outlets
     @IBOutlet private weak var imageView: UIImageView!
@@ -22,8 +24,6 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private Properties
-   
-
     
     var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
     private var statisticService: StatisticServiceProtocol?
@@ -35,11 +35,9 @@ final class MovieQuizViewController: UIViewController {
         // Округляем первую картинку
         imageView.layer.cornerRadius = 20
         presenter = MovieQuizPresenter(viewController: self)
-        
-
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
         statisticService = StatisticService()
-    
+        
         showLoadingIndicator()
     }
     
@@ -70,16 +68,16 @@ final class MovieQuizViewController: UIViewController {
     
     
     func highlightImageBorder(isCorrectAnswer: Bool) {
-            imageView.layer.masksToBounds = true
-            imageView.layer.borderWidth = 8
-            imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        }
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+    }
     
     func resetBorder() {
         imageView.layer.borderWidth = 0
     }
     
-  
+    
     
     // метод показа индикатора загрузки
     func showLoadingIndicator() {
