@@ -4,13 +4,10 @@
 //
 //  Главный контроллер
 
-
 import UIKit
 
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
-    
-    
     
     // MARK: - IB Outlets
     @IBOutlet private weak var imageView: UIImageView!
@@ -37,7 +34,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         presenter = MovieQuizPresenter(viewController: self)
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
         statisticService = StatisticService()
-        
         showLoadingIndicator()
     }
     
@@ -62,22 +58,21 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
-        
         imageView.layer.borderWidth = 0
     }
     
     
+    // подкрашивание рамки в зависимости от ответа
     func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
     }
     
+    // сброс рамки
     func resetBorder() {
         imageView.layer.borderWidth = 0
     }
-    
-    
     
     // метод показа индикатора загрузки
     func showLoadingIndicator() {

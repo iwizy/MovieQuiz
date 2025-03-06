@@ -2,8 +2,7 @@
 //  StatisticServiceProtocol.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 10.02.2025.
-//
+//  Протокол сервиса статистики
 
 import Foundation
 

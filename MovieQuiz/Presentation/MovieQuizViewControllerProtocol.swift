@@ -2,11 +2,9 @@
 //  MovieQuizViewControllerProtocol.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 04.03.2025.
-//
+//  Протокол основного вью контроллера
 
 import Foundation
-
 
 protocol MovieQuizViewControllerProtocol: AnyObject {
     func show(quiz step: QuizStepViewModel)

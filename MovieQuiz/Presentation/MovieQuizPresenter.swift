@@ -2,8 +2,7 @@
 //  MovieQuizPresenter.swift.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 02.03.2025.
-//
+//  Класс презентера
 
 import UIKit
 
@@ -46,9 +45,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         self.viewController?.alertBox?.showAlert(model: model)
     }
     
-    
-    // MARK: - Private Methods
-    
     func didLoadDataFromServer() {
         viewController?.hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
@@ -84,12 +80,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         didAnswer(isYes: false)
     }
     
-    private func didAnswer(isYes: Bool) {
-        guard let currentQuestion else { return }
-        let giveAnswer = isYes
-        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
-    }
-    
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question else { return }
         
@@ -97,32 +87,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.viewController?.show(quiz: viewModel)
-        }
-    }
-    
-    
-    private func showNextQuestionOrResults() {
-        if self.isLastQuestion() {
-            statisticService?.store(correct: correctAnswers, total: self.questionsAmount)
-            let model = AlertModel(
-                title: "Этот раунд окончен!",
-                message: """
-                         Ваш результат: \(correctAnswers)/\(questionsAmount)
-                         Количество сыгранных квизов: \(statisticService.gamesCount)
-                         Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
-                         Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
-                         """,
-                buttonText: "Сыграть еще раз")
-            { [weak self] in
-                guard let self else { return }
-                self.restartGame()
-                self.questionFactory?.requestNextQuestion()
-            }
-            self.viewController?.alertBox?.showAlert(model: model)
-            
-        } else {
-            self.switchToNextQuestion()
-            didLoadDataFromServer()
         }
     }
     
@@ -153,6 +117,20 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         self.viewController?.alertBox?.showAlert(model: model)
     }
     
+    // Показ результата вопроса в виде рамки красного или зеленого цвета
+    func showAnswerResult(isCorrect: Bool) {
+        
+        if isCorrect {
+            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+            correctAnswers += 1
+        } else {
+            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+        }
+        
+        dispatcher()
+    }
+    
+    // MARK: - Private Methods
     // Метод диспетчера
     private func dispatcher() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -167,17 +145,34 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    // Показ результата вопроса в виде рамки красного или зеленого цвета
-    func showAnswerResult(isCorrect: Bool) {
-        
-        if isCorrect {
-            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-            correctAnswers += 1
-        } else {
-            viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-        }
-        
-        dispatcher()
+    private func didAnswer(isYes: Bool) {
+        guard let currentQuestion else { return }
+        let giveAnswer = isYes
+        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
     }
     
+    private func showNextQuestionOrResults() {
+        if self.isLastQuestion() {
+            statisticService?.store(correct: correctAnswers, total: self.questionsAmount)
+            let model = AlertModel(
+                title: "Этот раунд окончен!",
+                message: """
+                         Ваш результат: \(correctAnswers)/\(questionsAmount)
+                         Количество сыгранных квизов: \(statisticService.gamesCount)
+                         Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))
+                         Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+                         """,
+                buttonText: "Сыграть еще раз")
+            { [weak self] in
+                guard let self else { return }
+                self.restartGame()
+                self.questionFactory?.requestNextQuestion()
+            }
+            self.viewController?.alertBox?.showAlert(model: model)
+            
+        } else {
+            self.switchToNextQuestion()
+            didLoadDataFromServer()
+        }
+    }
 }

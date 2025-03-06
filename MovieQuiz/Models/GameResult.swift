@@ -12,6 +12,6 @@ struct GameResult {
     let date: Date
     
     func bestGame(game: GameResult) -> Bool {
-       correct > game.correct
+        correct > game.correct
     }
 }

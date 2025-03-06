@@ -26,7 +26,6 @@ struct NetworkClient: NetworkRouting {
                 handler(.failure(error))
                 return
             }
-            
             // Проверяем, что нам пришёл успешный код ответа
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
@@ -38,7 +37,6 @@ struct NetworkClient: NetworkRouting {
             guard let data = data else { return }
             handler(.success(data))
         }
-        
         task.resume()
     }
 }

@@ -2,33 +2,11 @@
 //  StatisticService.swift
 //  MovieQuiz
 //
-//  Каасс статистики
+//  Класс статистики
 
 import Foundation
 
 final class StatisticService: StatisticServiceProtocol {
-    private let storage: UserDefaults = .standard // создаем переменную для более простого обращения к хранилищу вместо UserDefault.standard...
-    
-    private enum Keys: String { // перечисление для ключей доступа к storage
-        case totalCorrectAnswers
-        case gamesCount
-        case bestGameCorrect
-        case bestGameTotal
-        case bestGameDate
-        case totalQuestionsCount
-    }
-    
-    // переменная с общим количеством заданных вопросов
-    private var totalQuestionsCount: Int {
-        get { storage.integer(forKey: Keys.totalQuestionsCount.rawValue) }
-        set { storage.set(newValue, forKey: Keys.totalQuestionsCount.rawValue) }
-    }
-    
-    // переменная с общим количеством правильных ответов
-    private var totalCorrectAnswers: Int {
-        get { storage.integer(forKey: Keys.totalCorrectAnswers.rawValue) }
-        set { storage.set(newValue, forKey: Keys.totalCorrectAnswers.rawValue) }
-    }
     
     // общее количество сыгранных игр
     var gamesCount: Int {
@@ -64,6 +42,28 @@ final class StatisticService: StatisticServiceProtocol {
         return accuracy
     }
     
+    private let storage: UserDefaults = .standard // создаем переменную для более простого обращения к хранилищу вместо UserDefault.standard...
+    
+    private enum Keys: String { // перечисление для ключей доступа к storage
+        case totalCorrectAnswers
+        case gamesCount
+        case bestGameCorrect
+        case bestGameTotal
+        case bestGameDate
+        case totalQuestionsCount
+    }
+    
+    // переменная с общим количеством заданных вопросов
+    private var totalQuestionsCount: Int {
+        get { storage.integer(forKey: Keys.totalQuestionsCount.rawValue) }
+        set { storage.set(newValue, forKey: Keys.totalQuestionsCount.rawValue) }
+    }
+    
+    // переменная с общим количеством правильных ответов
+    private var totalCorrectAnswers: Int {
+        get { storage.integer(forKey: Keys.totalCorrectAnswers.rawValue) }
+        set { storage.set(newValue, forKey: Keys.totalCorrectAnswers.rawValue) }
+    }
     
     // метод сохранения результатов
     func store(correct count: Int, total amount: Int) {
