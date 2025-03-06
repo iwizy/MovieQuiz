@@ -7,10 +7,13 @@
 import Foundation
 import XCTest
 
-@testable import MovieQuiz // импортируем наше приложение для тестирования
+@testable import MovieQuiz
+
+
 
 class ArrayTests: XCTestCase {
-    func testGetValueInRange() throws { // тест на успешное взятие элемента по индексу
+    // Успешное взятие элемента массива
+    func testGetValueInRange() throws {
         // Given
         let array = [1, 1, 2, 3, 5]
         // When
@@ -19,8 +22,9 @@ class ArrayTests: XCTestCase {
         XCTAssertNotNil(value)
         XCTAssertEqual(value, 2)
     }
-    
-    func testGetValueOutOfRange() throws { // тест на взятие элемента по неправильному индексу
+
+    // неуспешное взятие элемента массива, индекс за пределами массива
+    func testGetValueOutOfRange() throws {
         // Given
         let array = [1, 1, 2, 3, 5]
         // When

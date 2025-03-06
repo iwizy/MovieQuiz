@@ -2,20 +2,21 @@
 //  MoviesLoaderTests.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 28.02.2025.
-//
+//  Тесты загрузчика фильмов
+
 
 import Foundation
-import XCTest // не забывайте импортировать фреймворк для тестирования
-@testable import MovieQuiz // импортируем приложение для тестирования
+import XCTest
+
+@testable import MovieQuiz
 
 struct StubNetworkClient: NetworkRouting {
     
     enum TestError: Error { // тестовая ошибка
-    case test
+        case test
     }
     
-    let emulateError: Bool // этот параметр нужен, чтобы заглушка эмулировала либо ошибку сети, либо успешный ответ
+    let emulateError: Bool // эмулация ошибки сети
     
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         if emulateError {
@@ -69,8 +70,8 @@ class MoviesLoaderTests: XCTestCase {
         // When
         let expectation = expectation(description: "Loading expectation")
         
+        // Then
         loader.loadMovies { result in
-            // Then
             switch result {
             case .success(let movies):
                 // давайте проверим, что пришло, например, два фильма — ведь в тестовых данных их всего два
@@ -80,7 +81,6 @@ class MoviesLoaderTests: XCTestCase {
                 XCTFail("Unexpected failure")
             }
         }
-        
         waitForExpectations(timeout: 1)
     }
     
@@ -92,8 +92,8 @@ class MoviesLoaderTests: XCTestCase {
         // When
         let expectation = expectation(description: "Loading expectation")
         
+        // Then
         loader.loadMovies { result in
-            // Then
             switch result {
             case .failure(let error):
                 XCTAssertNotNil(error)
@@ -102,7 +102,6 @@ class MoviesLoaderTests: XCTestCase {
                 XCTFail("Unexpected failure")
             }
         }
-        
         waitForExpectations(timeout: 1)
     }
 }

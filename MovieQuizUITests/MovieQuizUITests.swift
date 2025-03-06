@@ -12,13 +12,9 @@ final class MovieQuizUITests: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
         app = XCUIApplication()
         app.launch()
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
     override func tearDownWithError() throws {
@@ -30,42 +26,47 @@ final class MovieQuizUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
     
+    // тест кнопки ДА, сравнение постеров при смене вопроса и проверка смены лейбла индекса после смены вопроса
     func testYesButton() {
         sleep(3)
         
+        let indexLabel = app.staticTexts["Index"]
         let firstPoster = app.images["Poster"]
         let firstPosterData = firstPoster.screenshot().pngRepresentation
         
+        XCTAssertEqual(indexLabel.label, "1/10")
+        
         app.buttons["Yes"].tap()
+        
         sleep(3)
+        
         let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
-        XCTAssertTrue(secondPoster.exists)
-        XCTAssertFalse(firstPoster == secondPoster)
-        XCTAssertNotEqual(firstPosterData, secondPosterData)
+        
+        XCTAssertFalse(firstPosterData == secondPosterData)
+        XCTAssertEqual(indexLabel.label, "2/10")
     }
     
+    // тест кнопку НЕТ, сравнение постеров при смене вопроса и проверка смены лейбла индекса после смены вопроса
     func testNoButton() {
         sleep(3)
         
+        let indexLabel = app.staticTexts["Index"]
         let firstPoster = app.images["Poster"]
         let firstPosterData = firstPoster.screenshot().pngRepresentation
         
+        XCTAssertEqual(indexLabel.label, "1/10")
+        
         app.buttons["No"].tap()
+        
         sleep(3)
+        
         let secondPoster = app.images["Poster"]
         let secondPosterData = secondPoster.screenshot().pngRepresentation
-        XCTAssertTrue(secondPoster.exists)
-        XCTAssertFalse(firstPoster == secondPoster)
-        XCTAssertNotEqual(firstPosterData, secondPosterData)
+        
+        XCTAssertFalse(firstPosterData == secondPosterData)
+        XCTAssertEqual(indexLabel.label, "2/10")
     }
     
     func testIndexLabel() {
@@ -75,32 +76,27 @@ final class MovieQuizUITests: XCTestCase {
     
     func testAlert() {
         sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
-        app.buttons["Yes"].tap()
-        sleep(2)
+        
+        for _ in 1...10 {
+            app.buttons["Yes"].tap()
+            sleep(2)
+        }
         
         let alert = app.alerts["AlertPresenter"]
         XCTAssertTrue(alert.exists)
         XCTAssertTrue(alert.label == "Этот раунд окончен!")
         XCTAssertTrue(alert.buttons.firstMatch.label == "Сыграть еще раз")
+    }
+    
+    func testAlertButton() {
+        sleep(2)
         
+        for _ in 1...10 {
+            app.buttons["Yes"].tap()
+            sleep(2)
+        }
+        
+        let alert = app.alerts["AlertPresenter"]
         alert.buttons.firstMatch.tap()
         
         sleep(2)
