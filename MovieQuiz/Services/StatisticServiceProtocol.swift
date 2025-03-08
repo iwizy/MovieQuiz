@@ -2,15 +2,14 @@
 //  StatisticServiceProtocol.swift
 //  MovieQuiz
 //
-//  Created by Alexander Agafonov on 10.02.2025.
-//
+//  Протокол сервиса статистики
 
 import Foundation
 
 protocol StatisticServiceProtocol {
-    var gamesCount: Int { get }
-    var bestGame: GameResult { get }
-    var totalAccuracy: Double { get }
+    var gamesCount: Int { get } // Счетчик игр
+    var bestGame: GameResult { get } // Результат лучшей игры
+    var totalAccuracy: Double { get } // Средняя точность ответов
     
-    func store(correct count: Int, total amount: Int)
+    func store(correct count: Int, total amount: Int) // Метод сохранения результатов
 }
