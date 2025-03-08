@@ -8,19 +8,14 @@ import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    // MARK: - Public Properties
-    
-    var correctAnswers: Int = 0
-    
     // MARK: - Private Properties
-    
+    private var correctAnswers: Int = 0
     private let questionsAmount: Int = 10 // константа с общим количеством вопросов
     private var currentQuestionIndex: Int = 0 // Стартовое значение индекса первого элемента массива вопросов
     
     private var currentQuestion: QuizQuestion? // переменная текущего вопроса с опциональным типом вопроса
     private var statisticService: StatisticServiceProtocol!
     private var questionFactory: QuestionFactoryProtocol?
-    // private weak var viewController: MovieQuizViewController?
     private weak var viewController: MovieQuizViewControllerProtocol?
     
     // MARK: - Initializers
@@ -35,6 +30,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     // MARK: - Public Methods
     
+    // Метод показа ошибки загрузки данных
     func didFailToLoadData(with error: any Error) {
         let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки данных", buttonText: "Попробовать ещё раз")
         { [weak self] in
@@ -45,20 +41,19 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         self.viewController?.alertBox?.showAlert(model: model)
     }
     
+    // Метод отображения вопроса в случае успешной загрузки
     func didLoadDataFromServer() {
         viewController?.hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
     
-    func isLastQuestion() -> Bool {
-        currentQuestionIndex == questionsAmount - 1
-    }
-    
+    // Метод перезапуска игры
     func restartGame() {
         currentQuestionIndex = 0
         correctAnswers = 0
     }
     
+    // Метод перехода на следующий вопрос
     func switchToNextQuestion() {
         currentQuestionIndex += 1
     }
@@ -72,14 +67,17 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         return questionStep
     }
     
+    // Метод обработки нажатия на кнопку ДА
     func yesButtonClicked() {
         didAnswer(isYes: true)
     }
     
+    // Метод обработки нажатия на кнопку НЕТ
     func noButtonClicked() {
         didAnswer(isYes: false)
     }
     
+    // Метод отображения вопроса
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question else { return }
         
@@ -90,8 +88,23 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    // метода показа сообщения об ошибке
-    func showNetworkError(message: String) {
+    // Метод показа алерта в случае ошибки загрузки картинки
+    func didFailToLoadImage(with error: Error) {
+        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки изображения", buttonText: "Попробовать ещё раз")
+        { [weak self] in
+            guard let self else { return }
+            self.questionFactory?.loadData()
+        }
+        
+        self.viewController?.alertBox?.showAlert(model: model)
+    }
+    
+    
+    
+    // MARK: - Private Methods
+    
+    // Метод показа сообщения об ошибке
+    private func showNetworkError(message: String) {
         viewController?.hideLoadingIndicator() // скрываем индикатор загрузки
         
         // создайте и покажите алерт
@@ -106,19 +119,8 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         
     }
     
-    // метод показа алерта в случае ошибки загрузки картинки
-    func didFailToLoadImage(with error: Error) {
-        let model = AlertModel(title: "Ошибка", message: "Ошибка загрузки изображения", buttonText: "Попробовать ещё раз")
-        { [weak self] in
-            guard let self else { return }
-            self.questionFactory?.loadData()
-        }
-        
-        self.viewController?.alertBox?.showAlert(model: model)
-    }
-    
     // Показ результата вопроса в виде рамки красного или зеленого цвета
-    func showAnswerResult(isCorrect: Bool) {
+    private func showAnswerResult(isCorrect: Bool) {
         
         if isCorrect {
             viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
@@ -130,7 +132,11 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         dispatcher()
     }
     
-    // MARK: - Private Methods
+    // Метод проверки последний ли вопрос
+    private func isLastQuestion() -> Bool {
+        currentQuestionIndex == questionsAmount - 1
+    }
+    
     // Метод диспетчера
     private func dispatcher() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -144,12 +150,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
+    // Метод обработки ответа пользователя
     private func didAnswer(isYes: Bool) {
         guard let currentQuestion else { return }
-        let giveAnswer = isYes
-        showAnswerResult(isCorrect: giveAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: isYes == currentQuestion.correctAnswer)
     }
     
+    // Метод показа результата или следующего вопроса
     private func showNextQuestionOrResults() {
         if self.isLastQuestion() {
             statisticService?.store(correct: correctAnswers, total: self.questionsAmount)

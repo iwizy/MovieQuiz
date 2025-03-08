@@ -22,9 +22,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     // MARK: - Private Properties
     
-    var alertBox: AlertPresenter? // переменная алерта с опциональным типом АлертПрезентера
-    private var statisticService: StatisticServiceProtocol?
-    private var presenter: MovieQuizPresenter!
+    var alertBox: AlertPresenter? // Переменная алерта с опциональным типом АлертПрезентера
+    private var presenter: MovieQuizPresenter! // Переменная презентера
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -33,7 +32,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         imageView.layer.cornerRadius = 20
         presenter = MovieQuizPresenter(viewController: self)
         alertBox = AlertPresenter(viewController: self) // Инициализируем алерт
-        statisticService = StatisticService()
         showLoadingIndicator()
     }
     
@@ -62,24 +60,24 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     
     
-    // подкрашивание рамки в зависимости от ответа
+    // Подкрашивание рамки в зависимости от ответа
     func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
     }
     
-    // сброс рамки
+    // Сброс рамки
     func resetBorder() {
         imageView.layer.borderWidth = 0
     }
     
-    // метод показа индикатора загрузки
+    // Метод показа индикатора загрузки
     func showLoadingIndicator() {
         activityIndicator.startAnimating() // включаем анимацию
     }
     
-    // метод скрытия индикатора загрузки
+    // Метод скрытия индикатора загрузки
     func hideLoadingIndicator() {
         activityIndicator.stopAnimating() // выключаем анимацию
     }

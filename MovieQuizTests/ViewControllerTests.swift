@@ -11,30 +11,12 @@ import XCTest
 
 final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
     var alertBox: MovieQuiz.AlertPresenter?
-    
-    func resetBorder() {
-        
-    }
-    
-    func changeButtonState(isEnabled: Bool) {
-        
-    }
-    
-    func show(quiz step: QuizStepViewModel) {
-        
-    }
-    
-    func highlightImageBorder(isCorrectAnswer: Bool) {
-        
-    }
-    
-    func showLoadingIndicator() {
-        
-    }
-    
-    func hideLoadingIndicator() {
-        
-    }
+    func resetBorder() {}
+    func changeButtonState(isEnabled: Bool) {}
+    func show(quiz step: QuizStepViewModel) {}
+    func highlightImageBorder(isCorrectAnswer: Bool) {}
+    func showLoadingIndicator() {}
+    func hideLoadingIndicator() {}
 }
 
 final class MovieQuizPresenterTests: XCTestCase {
